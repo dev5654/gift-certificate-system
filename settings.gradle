@@ -1,0 +1,6 @@
+rootProject.name = 'gift_certificate_sys'
+include 'api'
+include 'service'
+include 'repository'
+include 'config'
+

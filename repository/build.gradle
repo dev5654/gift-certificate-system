@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id "org.flywaydb.flyway" version "8.5.11"
+    id "jacoco"
+}
+
+group 'com.epam.esm'
+version '1.0'
+
+test {
+    reports {
+        html.enabled(true)
+    }
+}
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/gift_certificate_system'
+    user = 'postgres'
+    password = 'smile181'
+    driver='org.postgresql.Driver'
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation 'org.springframework:spring-test:5.3.20'
+    implementation 'org.springframework:spring-context:5.3.20'
+    implementation 'org.springframework:spring-jdbc:5.3.20'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    implementation 'org.postgresql:postgresql:42.3.4'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.11'
+    implementation project(":config")
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'com.h2database:h2:2.1.212'
+}
+
+test {
+    useJUnitPlatform()
+}
