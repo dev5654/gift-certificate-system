@@ -93,7 +93,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
                     giftCertificate.setDescription(rs.getString("gift_certificate_description"));
                     giftCertificate.setPrice(rs.getDouble("gift_certificate_price"));
                     giftCertificate.setDuration(rs.getInt("gift_certificate_duration"));
-                    if(rs.getString("tag_id") != null &&
+                    if (rs.getString("tag_id") != null &&
                             rs.getString("tag_name") != null) {
                         Tag tag = new Tag();
                         tag.setId(UUID.fromString(rs.getString("tag_id")));
@@ -122,10 +122,10 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
                 "    left join gift_certificate_tag gct on gc.id = gct.gift_certificate_id\n" +
                 "    left join tag t on gct.tag_id = t.id ";
 
-        if(name != null)
+        if (name != null)
             QUERY_GET_CERTIFICATE_WITH_FILTER += "where gc.name like '%" + name + "%' ";
 
-        if(description != null)
+        if (description != null)
             QUERY_GET_CERTIFICATE_WITH_FILTER += "where gc.description like '%" + description + "%' ";
 
         if (tag != null) {
@@ -135,11 +135,11 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
                 QUERY_GET_CERTIFICATE_WITH_FILTER += "where t.name='" + tag + "' ";
         }
 
-        if(sortParams != null) {
-            if (sortParams.contains("name"))
-                QUERY_GET_CERTIFICATE_WITH_FILTER += "order by gc." + sortParams;
-            else if (sortParams.contains("create_date"))
-                QUERY_GET_CERTIFICATE_WITH_FILTER += "order by gc." + sortParams;
+        if (sortParams != null) {
+            if (sortParams.contains("name/create_date"))
+                QUERY_GET_CERTIFICATE_WITH_FILTER += "order by gc.name, gc.create_date";
+            else if (sortParams.contains("name/create_date/desc"))
+                QUERY_GET_CERTIFICATE_WITH_FILTER += "order by gc.name, gc.create_date desc;";
             else
                 QUERY_GET_CERTIFICATE_WITH_FILTER += "order by gc." + sortParams;
         }
