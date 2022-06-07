@@ -4,7 +4,7 @@ import com.epam.esm.DAO.gift_certificate.GiftCertificateDAOImpl;
 import com.epam.esm.DAO.tag.TagDAOImpl;
 import com.epam.esm.DTO.GiftCertificateDTO;
 import com.epam.esm.DTO.TagDTO;
-import com.epam.esm.DTO.response.BaseResponse;
+import com.epam.esm.DTO.response.ResponseMessage;
 import com.epam.esm.DTO.response.ResponseDTO;
 import com.epam.esm.entities.GiftCertificate;
 import com.epam.esm.entities.Tag;
@@ -15,6 +15,7 @@ import com.epam.esm.validators.GiftCertificateValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.image.RescaleOp;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,7 +26,7 @@ import java.util.*;
  */
 
 @Service
-public class GiftCertificateServiceImpl implements GiftCertificateService, BaseResponse {
+public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private final GiftCertificateValidator giftCertificateValidator;
     private final GiftCertificateMapper giftCertificateMapper;
@@ -55,7 +56,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService, BaseR
         if (!giftCertificateDTO.getTags().isEmpty())
             createRelationBetweenGiftCertificateAndTag(giftCertificateID, giftCertificateDTO.getTags());
 
-        return new ResponseDTO(CREATED, giftCertificateID);
+        return new ResponseDTO(ResponseMessage.CREATED.getValues(), giftCertificateID);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService, BaseR
             createRelationBetweenGiftCertificateAndTag(giftCertificate.getId(), giftCertificateDTO.getTags());
         }
 
-        return new ResponseDTO(UPDATED);
+        return new ResponseDTO(ResponseMessage.UPDATED.getValues());
     }
 
     @Override
@@ -88,7 +89,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService, BaseR
         giftCertificateDAOImpl.deleteConnection(id);
         giftCertificateDAOImpl.delete(id);
 
-        return new ResponseDTO(DELETED);
+        return new ResponseDTO(ResponseMessage.DELETED.getValues());
     }
 
     @Override

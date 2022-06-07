@@ -2,7 +2,7 @@ package com.epam.esm.services.tag;
 
 import com.epam.esm.DAO.tag.TagDAOImpl;
 import com.epam.esm.DTO.TagDTO;
-import com.epam.esm.DTO.response.BaseResponse;
+import com.epam.esm.DTO.response.ResponseMessage;
 import com.epam.esm.DTO.response.ResponseDTO;
 import com.epam.esm.entities.Tag;
 import com.epam.esm.exceptions.NotFoundException;
@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 
 @Service
-public class TagServiceImpl implements TagService, BaseResponse  {
+public class TagServiceImpl implements TagService{
 
     private final TagDAOImpl tagDAOImpl;
     private final TagValidator tagValidator;
@@ -42,7 +42,7 @@ public class TagServiceImpl implements TagService, BaseResponse  {
 
         UUID tagID = tagDAOImpl.create(tag);
 
-        return new ResponseDTO(CREATED, tagID);
+        return new ResponseDTO(ResponseMessage.CREATED.getValues(), tagID);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TagServiceImpl implements TagService, BaseResponse  {
 
         tagDAOImpl.update(tag);
 
-        return new ResponseDTO(UPDATED);
+        return new ResponseDTO(ResponseMessage.UPDATED.getValues());
     }
 
     @Override
@@ -68,7 +68,7 @@ public class TagServiceImpl implements TagService, BaseResponse  {
         tagDAOImpl.deleteConnection(id);
         tagDAOImpl.delete(id);
 
-        return new ResponseDTO(DELETED);
+        return new ResponseDTO(ResponseMessage.DELETED.getValues());
     }
 
     @Override

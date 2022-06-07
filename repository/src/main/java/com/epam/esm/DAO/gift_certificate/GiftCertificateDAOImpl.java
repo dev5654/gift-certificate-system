@@ -3,6 +3,7 @@ package com.epam.esm.DAO.gift_certificate;
 import com.epam.esm.entities.GiftCertificate;
 import com.epam.esm.entities.Tag;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -23,6 +24,10 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+   /* private static final String INSERT_CERTIFICATE = "INSERT INTO public.gift_certificate(id, name, description, price, duration, " +
+            "create_date, last_update_date) VALUES(:id,:name, :description, :price, :duration, " +
+            ":create_date, :last_update_date)";
+*/
     @Override
     public UUID create(GiftCertificate giftCertificate) {
         String QUERY_INSERT_CERTIFICATE = """
@@ -37,6 +42,18 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
                 giftCertificate.getCreateDate(),
                 giftCertificate.getLastUpdateDate());
         return giftCertificate.getId();
+      /*  MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("id", giftCertificate.getId())
+                .addValue("name", giftCertificate.getName())
+                .addValue("description", giftCertificate.getDescription())
+                .addValue("price", giftCertificate.getPrice())
+                .addValue("duration", giftCertificate.getDuration())
+                .addValue("create_date", giftCertificate.getCreateDate())
+                .addValue("last_update_date", giftCertificate.getLastUpdateDate());
+//        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(INSERT_CERTIFICATE, namedParameters);
+        return giftCertificate.getId();*/
+
     }
 
     @Override
