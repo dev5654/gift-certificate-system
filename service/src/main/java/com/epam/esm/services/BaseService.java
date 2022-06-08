@@ -14,8 +14,6 @@ public interface BaseService<DT> {
 
     ResponseDTO create(DT dto);
 
-    ResponseDTO update(UUID id, DT dto);
-
     ResponseDTO delete(UUID id);
 
     ResponseDTO get(UUID id);

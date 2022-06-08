@@ -2,6 +2,7 @@ package com.epam.esm.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -11,7 +12,7 @@ import java.util.UUID;
  */
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Tag extends BaseEntity {
+public class Tag extends BaseEntity implements Serializable {
     private String name;
 
     public Tag() {

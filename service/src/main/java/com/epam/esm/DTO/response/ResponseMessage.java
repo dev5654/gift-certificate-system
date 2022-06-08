@@ -3,7 +3,7 @@ package com.epam.esm.DTO.response;
 /**
  * @author Muslim Aktamov
  * @project Rest API basic
- * Base Response
+ * ResponseMessage
  */
 
 public enum ResponseMessage {

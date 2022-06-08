@@ -45,7 +45,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public ResponseDTO create(GiftCertificateDTO giftCertificateDTO) {
         giftCertificateValidator.validate(giftCertificateDTO);
-
         GiftCertificate giftCertificate = giftCertificateMapper.fromDTOToEntity(giftCertificateDTO);
         giftCertificate.setId(UUID.randomUUID());
         giftCertificate.setCreateDate(LocalDateTime.now());
@@ -53,17 +52,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         UUID giftCertificateID = giftCertificateDAOImpl.create(giftCertificate);
 
-        if (!giftCertificateDTO.getTags().isEmpty())
+        if (!giftCertificateDTO.getTags().isEmpty()) {
             createRelationBetweenGiftCertificateAndTag(giftCertificateID, giftCertificateDTO.getTags());
-
+        }
         return new ResponseDTO(ResponseMessage.CREATED.getValues(), giftCertificateID);
+
     }
 
-    @Override
+
     @Transactional
     public ResponseDTO update(UUID id, GiftCertificateDTO giftCertificateDTO) {
         GiftCertificate giftCertificate = giftCertificateDAOImpl.get(id);
-        if(giftCertificate == null || giftCertificate.getId() == null)
+        if (giftCertificate == null || giftCertificate.getId() == null)
             throw new NotFoundException("Gift Certificate not found id=" + id);
         giftCertificateValidator.validate(giftCertificateDTO);
 
@@ -84,7 +84,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public ResponseDTO delete(UUID id) {
         GiftCertificate giftCertificate = giftCertificateDAOImpl.get(id);
-        if(giftCertificate == null || giftCertificate.getId() == null)
+        if (giftCertificate == null || giftCertificate.getId() == null)
             throw new NotFoundException("Gift Certificate not found id=" + id);
         giftCertificateDAOImpl.deleteConnection(id);
         giftCertificateDAOImpl.delete(id);
@@ -95,7 +95,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public ResponseDTO get(UUID id) {
         GiftCertificate giftCertificate = giftCertificateDAOImpl.get(id);
-        if(giftCertificate == null || giftCertificate.getId() == null)
+        if (giftCertificate == null || giftCertificate.getId() == null)
             throw new NotFoundException("Gift certificate not found id =" + id);
         return new ResponseDTO(giftCertificate);
     }
@@ -105,18 +105,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<UUID> giftCertificateIDList = giftCertificateDAOImpl.getAll();
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
 
-        for(UUID id: giftCertificateIDList)
+        for (UUID id : giftCertificateIDList)
             giftCertificateList.add(giftCertificateDAOImpl.get(id));
 
         return new ResponseDTO(giftCertificateList);
     }
 
     @Override
-    public ResponseDTO getWithParams(String name, String description, String tag, String sortParams) {
+    public ResponseDTO getWithFilteredParams(String name, String description, String tag, String sortParams) {
         Set<UUID> giftCertificateIDSet = giftCertificateDAOImpl.getAllWithFilter(name, description, tag, sortParams);
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
 
-        for(UUID id: giftCertificateIDSet)
+        for (UUID id : giftCertificateIDSet)
             giftCertificateList.add(giftCertificateDAOImpl.get(id));
 
         return new ResponseDTO(giftCertificateList);
@@ -137,8 +137,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private void createRelationBetweenGiftCertificateAndTag(UUID giftCertificateID, List<TagDTO> tags) {
         for (TagDTO tagDTO : tags) {
             Tag tag = tagDAOImpl.getByName(tagDTO.getName());
-            UUID tagID = tag == null ? tagDAOImpl.create(tagMapper.fromDTOToEntity(tagDTO)) : tag.getId();
-            giftCertificateDAOImpl.createConnection(giftCertificateID, tagID);
+            UUID tagId;
+            if (tag == null) {
+                tagId = tagDAOImpl.create(tagMapper.fromDTOToEntity(tagDTO));
+            } else {
+                tagId = tag.getId();
+            }
+//            UUID tagID = tag == null ? tagDAOImpl.create(tagMapper.fromDTOToEntity(tagDTO)) : tag.getId();
+            giftCertificateDAOImpl.createConnection(giftCertificateID, tagId);
         }
     }
 

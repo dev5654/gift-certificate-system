@@ -1,8 +1,9 @@
 package com.epam.esm.DAO.gift_certificate;
 
+import com.epam.esm.DAO.tag.TagDAOImpl;
 import com.epam.esm.entities.GiftCertificate;
 import com.epam.esm.entities.Tag;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
@@ -18,77 +19,84 @@ import java.util.*;
 @Repository
 public class GiftCertificateDAOImpl implements GiftCertificateDAO {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final MapSqlParameterSource parameterSource;
 
-    public GiftCertificateDAOImpl(JdbcTemplate jdbcTemplate) {
+
+    public GiftCertificateDAOImpl(NamedParameterJdbcTemplate jdbcTemplate, MapSqlParameterSource parameterSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.parameterSource = parameterSource;
     }
 
-   /* private static final String INSERT_CERTIFICATE = "INSERT INTO public.gift_certificate(id, name, description, price, duration, " +
+    private static final String INSERT_GIFT_CERTIFICATE = "INSERT INTO gift_certificate(id, name, description, price, duration, " +
             "create_date, last_update_date) VALUES(:id,:name, :description, :price, :duration, " +
             ":create_date, :last_update_date)";
-*/
+
     @Override
     public UUID create(GiftCertificate giftCertificate) {
-        String QUERY_INSERT_CERTIFICATE = """
-                insert into gift_certificate(id, name, description, price, duration, create_date, last_update_date)
-                            values(?, ?, ?, ?, ?, ?, ?);""";
-        jdbcTemplate.update(QUERY_INSERT_CERTIFICATE,
-                giftCertificate.getId(),
-                giftCertificate.getName(),
-                giftCertificate.getDescription(),
-                giftCertificate.getPrice(),
-                giftCertificate.getDuration(),
-                giftCertificate.getCreateDate(),
-                giftCertificate.getLastUpdateDate());
-        return giftCertificate.getId();
-      /*  MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("id", giftCertificate.getId())
+        parameterSource.addValue("id", giftCertificate.getId())
                 .addValue("name", giftCertificate.getName())
                 .addValue("description", giftCertificate.getDescription())
                 .addValue("price", giftCertificate.getPrice())
                 .addValue("duration", giftCertificate.getDuration())
                 .addValue("create_date", giftCertificate.getCreateDate())
                 .addValue("last_update_date", giftCertificate.getLastUpdateDate());
-//        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(INSERT_CERTIFICATE, namedParameters);
-        return giftCertificate.getId();*/
+        jdbcTemplate.update(INSERT_GIFT_CERTIFICATE, parameterSource);
+
+      /*  if(!giftCertificate.getTags().isEmpty()){
+            for (Tag tag : giftCertificate.getTags()) {
+                TagDAOImpl.create
+            }
+        }*/
+        return giftCertificate.getId();
 
     }
+
+    private static final String INSERT_GIFT_CERTIFICATE_TAG = "INSERT INTO gift_certificate_tag(gift_certificate_id, tag_id)" +
+            " VALUES(:gift_certificate_id, :tag_id)";
 
     @Override
     public void createConnection(UUID giftCertificateID, UUID tagID) {
-        String QUERY_INSERT = """
+      /*  String QUERY_INSERT = """
                 insert into gift_certificate_tag(gift_certificate_id, tag_id)
-                            values(?, ?);""";
-        jdbcTemplate.update(QUERY_INSERT, giftCertificateID, tagID);
+                            values(?, ?);""";*/
+        parameterSource.addValue("gift_certificate_id", giftCertificateID)
+                .addValue("tag_id", tagID);
+        jdbcTemplate.update(INSERT_GIFT_CERTIFICATE_TAG, parameterSource);
     }
+
+    private static final String UPDATE_GIFT_CERTIFICATE = "UPDATE gift_certificate set name = :name, description = :description, price = :price, " +
+            "duration = :duration, last_update_date = :last_update_date where id = :id";
 
     @Override
     public void update(GiftCertificate giftCertificate) {
-        String QUERY_UPDATE_CERTIFICATE = """
+      /*  String QUERY_UPDATE_GIFT_CERTIFICATE = """
                 update gift_certificate set name = ?, description = ?, price = ?, duration = ?, last_update_date = ? where id = ?
-                """;
-        jdbcTemplate.update(QUERY_UPDATE_CERTIFICATE,
-                giftCertificate.getName(),
-                giftCertificate.getDescription(),
-                giftCertificate.getPrice(),
-                giftCertificate.getDuration(),
-                giftCertificate.getLastUpdateDate(),
-                giftCertificate.getId());
+                """;*/
+        parameterSource.addValue("name", giftCertificate.getName())
+                .addValue("description", giftCertificate.getDescription())
+                .addValue("price", giftCertificate.getPrice())
+                .addValue("duration", giftCertificate.getDuration())
+                .addValue("last_update_date", giftCertificate.getLastUpdateDate())
+                .addValue("id", giftCertificate.getId());
+        jdbcTemplate.update(UPDATE_GIFT_CERTIFICATE, parameterSource);
     }
+
+    private static final String DELETE_GIFT_CERTIFICATE = "delete from gift_certificate where id=:id";
 
     @Override
     public void delete(UUID id) {
-        String QUERY_DELETE_CERTIFICATE = "delete from gift_certificate where id='" + id + "'";
-        jdbcTemplate.update(QUERY_DELETE_CERTIFICATE);
+        parameterSource.addValue("id", id);
+        jdbcTemplate.update(DELETE_GIFT_CERTIFICATE, parameterSource);
     }
 
 
+    private static final String DELETE_GIFT_CERTIFICATE_TAG = "delete from gift_certificate_tag where gift_certificate_id=:id";
+
     @Override
     public void deleteConnection(UUID id) {
-        String QUERY_DELETE = "delete from gift_certificate_tag where gift_certificate_id='" + id + "'";
-        jdbcTemplate.update(QUERY_DELETE);
+       parameterSource.addValue("id",id);
+        jdbcTemplate.update(DELETE_GIFT_CERTIFICATE_TAG,parameterSource);
     }
 
 

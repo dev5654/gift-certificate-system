@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -32,7 +34,7 @@ class GiftCertificateDAOImplTest {
     private GiftCertificateDAOImpl giftCertificateDAOImpl;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
     private GiftCertificate giftCertificate;
 
@@ -105,7 +107,8 @@ class GiftCertificateDAOImplTest {
     }
 
     void createTables() {
-        String query = """
+        String QUERY = """
+                                
                 drop table if exists gift_certificate_tag;
                 drop table if exists gift_certificate;
                 drop table if exists tag;
@@ -135,7 +138,7 @@ class GiftCertificateDAOImplTest {
                                  references tag (id)
                          );
                 """;
-        jdbcTemplate.update(query);
+        jdbcTemplate.update(QUERY, new MapSqlParameterSource());
     }
 
 }

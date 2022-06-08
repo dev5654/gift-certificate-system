@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 
 @Service
-public class TagServiceImpl implements TagService{
+public class TagServiceImpl implements TagService {
 
     private final TagDAOImpl tagDAOImpl;
     private final TagValidator tagValidator;
@@ -39,6 +39,7 @@ public class TagServiceImpl implements TagService{
         tagValidator.validate(tagDTO);
 
         Tag tag = tagMapper.fromDTOToEntity(tagDTO);
+        tag.setId(UUID.randomUUID());
 
         UUID tagID = tagDAOImpl.create(tag);
 
@@ -47,23 +48,8 @@ public class TagServiceImpl implements TagService{
 
     @Override
     @Transactional
-    public ResponseDTO update(UUID id, TagDTO tagDTO) {
-        if(tagDAOImpl.get(id) == null)
-            throw new NotFoundException("Tag not found id=" + id);
-        tagValidator.validate(tagDTO);
-
-        Tag tag = tagDAOImpl.get(id);
-        tag.setName(tagDTO.getName() != null ? tagDTO.getName() : tag.getName());
-
-        tagDAOImpl.update(tag);
-
-        return new ResponseDTO(ResponseMessage.UPDATED.getValues());
-    }
-
-    @Override
-    @Transactional
     public ResponseDTO delete(UUID id) {
-        if(tagDAOImpl.get(id) == null)
+        if (tagDAOImpl.get(id) == null)
             throw new NotFoundException("Tag not found id=" + id);
         tagDAOImpl.deleteConnection(id);
         tagDAOImpl.delete(id);
@@ -73,7 +59,8 @@ public class TagServiceImpl implements TagService{
 
     @Override
     public ResponseDTO get(UUID id) {
-        if(tagDAOImpl.get(id) == null)
+        Tag tag=tagDAOImpl.get(id);
+        if (tag == null || tag.getId()==null )
             throw new NotFoundException("Tag not found id=" + id);
         return new ResponseDTO(tagDAOImpl.get(id));
     }

@@ -80,7 +80,7 @@ class GiftCertificateServiceImplTest {
         when(giftCertificateMapper.fromDTOToEntity(giftCertificateDTO)).thenReturn(giftCertificate);
         when(giftCertificateDAOImpl.create(giftCertificate)).thenReturn(giftCertificate.getId());
         ResponseDTO responseDTO = giftCertificateServiceImpl.create(giftCertificateDTO);
-        assertEquals(CREATED, responseDTO.getMessage());
+        assertEquals(CREATED.getValues(), responseDTO.getMessage());
     }
 
     @Test
@@ -88,7 +88,7 @@ class GiftCertificateServiceImplTest {
         doNothing().when(giftCertificateValidator).validate(giftCertificateDTO);
         when(giftCertificateDAOImpl.get(giftCertificate.getId())).thenReturn(giftCertificate);
         ResponseDTO responseDTO = giftCertificateServiceImpl.update(giftCertificate.getId(), giftCertificateDTO);
-        assertEquals(UPDATED, responseDTO.getMessage());
+        assertEquals(UPDATED.getValues(), responseDTO.getMessage());
     }
 
     @Test
@@ -97,7 +97,7 @@ class GiftCertificateServiceImplTest {
         doNothing().when(giftCertificateDAOImpl).deleteConnection(giftCertificate.getId());
         doNothing().when(giftCertificateDAOImpl).delete(giftCertificate.getId());
         ResponseDTO responseDTO = giftCertificateServiceImpl.delete(giftCertificate.getId());
-        assertEquals(DELETED, responseDTO.getMessage());
+        assertEquals(DELETED.getValues(), responseDTO.getMessage());
     }
 
     @Test
@@ -115,7 +115,7 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void getWithParams() {
-        ResponseDTO responseDTO = giftCertificateServiceImpl.getWithParams("TestTag", null, null, null);
+        ResponseDTO responseDTO = giftCertificateServiceImpl.getWithFilteredParams("TestTag", null, null, null);
         assertNotNull(responseDTO.getData());
     }
 }

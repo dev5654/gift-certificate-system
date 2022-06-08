@@ -7,6 +7,6 @@ import com.epam.esm.services.BaseService;
 public interface GiftCertificateService extends BaseService<GiftCertificateDTO> {
 
 
-    ResponseDTO getWithParams(String name, String description, String tag, String sortParams);
+    ResponseDTO getWithFilteredParams(String name, String description, String tag, String sortParams);
 
 }

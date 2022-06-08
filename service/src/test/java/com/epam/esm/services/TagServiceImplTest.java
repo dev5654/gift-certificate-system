@@ -52,17 +52,9 @@ class TagServiceImplTest {
     void create() {
         doNothing().when(tagValidator).validate(tagDTO);
         ResponseDTO responseDTO = tagServiceImpl.create(tagDTO);
-        assertEquals(CREATED, responseDTO.getMessage());
+        assertEquals(CREATED.getValues(), responseDTO.getMessage());
     }
 
-    @Test
-    void update() {
-        doNothing().when(tagValidator).validate(tagDTO);
-        when(tagDAOImpl.get(tag.getId())).thenReturn(tag);
-        doNothing().when(tagDAOImpl).update(tag);
-        ResponseDTO responseDTO = tagServiceImpl.update(tag.getId(), tagDTO);
-        assertEquals(UPDATED, responseDTO.getMessage());
-    }
 
     @Test
     void delete() {
@@ -70,7 +62,7 @@ class TagServiceImplTest {
         doNothing().when(tagDAOImpl).deleteConnection(tag.getId());
         doNothing().when(tagDAOImpl).delete(tag.getId());
         ResponseDTO responseDTO = tagServiceImpl.delete(tag.getId());
-        assertEquals(DELETED, responseDTO.getMessage());
+        assertEquals(DELETED.getValues(), responseDTO.getMessage());
     }
 
     @Test

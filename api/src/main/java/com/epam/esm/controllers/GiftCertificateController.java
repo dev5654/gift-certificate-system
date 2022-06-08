@@ -104,7 +104,7 @@ public class GiftCertificateController {
                                                   @RequestParam(value = "description", required = false) String description,
                                                   @RequestParam(value = "tag", required = false) String tag,
                                                   @RequestParam(value = "sortParams", required = false) String sortParams) {
-        ResponseDTO responseDTO = giftCertificateServiceImpl.getWithParams(name, description, tag, sortParams);
+        ResponseDTO responseDTO = giftCertificateServiceImpl.getWithFilteredParams(name, description, tag, sortParams);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responseDTO);

@@ -4,14 +4,16 @@ import com.epam.esm.DAO.gift_certificate.GiftCertificateDAOImpl;
 import com.epam.esm.DAO.tag.TagDAOImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
  * @author Muslim Aktamov
  * @project Rest API basic
  * Bean config
- */
+ **/
+
 
 @Configuration
 //@PropertySource(value = "classpath:application-test.properties", ignoreResourceNotFound = true)
@@ -37,19 +39,23 @@ public class BeanConfig {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public NamedParameterJdbcTemplate jdbcTemplate() {
+        return new NamedParameterJdbcTemplate(dataSource());
     }
 
     @Bean
-    public GiftCertificateDAOImpl giftCertificateDAO(JdbcTemplate jdbcTemplate) {
-        return new GiftCertificateDAOImpl(jdbcTemplate);
+    public MapSqlParameterSource parameterSource() {
+        return new MapSqlParameterSource();
     }
 
     @Bean
-    public TagDAOImpl tagDAO(JdbcTemplate jdbcTemplate) {
-        return new TagDAOImpl(jdbcTemplate);
+    public GiftCertificateDAOImpl giftCertificateDAO(NamedParameterJdbcTemplate jdbcTemplate, MapSqlParameterSource parameterSource) {
+        return new GiftCertificateDAOImpl(jdbcTemplate, parameterSource);
     }
 
 
+    @Bean
+    public TagDAOImpl tagDAO(NamedParameterJdbcTemplate jdbcTemplate, MapSqlParameterSource parameterSource) {
+        return new TagDAOImpl(jdbcTemplate, parameterSource);
+    }
 }

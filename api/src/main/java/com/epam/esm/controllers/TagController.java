@@ -36,18 +36,13 @@ public class TagController {
         return ResponseEntity.status(HttpStatus.CREATED).body(tagServiceImpl.create(tagDTO));
     }
 
-    /**
-     * Update Tag
-     *
-     * @param id     - ID
-     * @param tagDTO - Tag DTO
-     * @return Response DTO
-     */
+ /*
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody TagDTO tagDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(tagServiceImpl.update(id, tagDTO));
     }
+*/
 
     /**
      * Delete Tag
